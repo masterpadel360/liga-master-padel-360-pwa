@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>LIGA MASTER PÁDEL 360</title>
+<meta name="description" content="Liga Master Pádel 360 — Torneo Apertura 2026. Posiciones, fixture y resultados en vivo.">
+<meta name="theme-color" content="#0a0a0c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============================================================
+     Sprite de íconos — un solo bloque, sin librerías externas.
+     Cada pantalla los usa con <svg class="ic"><use href="#icon-x"/></svg>
+     ============================================================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="icon-home" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9.5h5V14h3v5.5h5V10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-chart" viewBox="0 0 24 24"><rect x="4" y="12" width="4" height="8" rx="1" fill="currentColor"/><rect x="10" y="7" width="4" height="13" rx="1" fill="currentColor"/><rect x="16" y="3" width="4" height="17" rx="1" fill="currentColor"/></symbol>
+  <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3.2" y="5" width="17.6" height="15.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><line x1="3.2" y1="9.8" x2="20.8" y2="9.8" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2.6" x2="8" y2="6.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="16" y1="2.6" x2="16" y2="6.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="icon-trophy" viewBox="0 0 24 24"><path d="M7.5 4h9v4.2a4.5 4.5 0 0 1-9 0V4Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7.5 5.3H4.8a2.7 2.7 0 0 0 2.7 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.5 5.3h2.7a2.7 2.7 0 0 1-2.7 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="12.4" x2="12" y2="16.3" stroke="currentColor" stroke-width="1.8"/><line x1="8.7" y1="20" x2="15.3" y2="20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="16.3" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="icon-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.7" fill="currentColor"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/><circle cx="19" cy="12" r="1.7" fill="currentColor"/></symbol>
+  <symbol id="icon-users" viewBox="0 0 24 24"><circle cx="9" cy="8.3" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.3 20c.5-3.3 3-5.3 5.7-5.3s5.2 2 5.7 5.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="17" cy="9.4" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.3 20c.3-2.1 1.7-3.7 3.4-4.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="icon-book" viewBox="0 0 24 24"><path d="M5 4.5h9a3 3 0 0 1 3 3V19H8.5a3 3 0 0 0-3 3V4.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><line x1="17" y1="7.5" x2="17" y2="22" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="icon-medal" viewBox="0 0 24 24"><circle cx="12" cy="15" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.3 11 6.4 3h3.1l2.6 6.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14.7 11 17.6 3h-3.1l-2.6 6.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="15" r="2" fill="currentColor"/></symbol>
+  <symbol id="icon-image" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8.3" cy="9.6" r="1.5" fill="currentColor"/><path d="M21 15.5 16 11l-4.3 4.3-2-2L3 18.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M12 20s-7.4-4.5-9.6-9A5 5 0 0 1 12 6.5 5 5 0 0 1 21.6 11c-2.2 4.5-9.6 9-9.6 9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><line x1="12" y1="11" x2="12" y2="16.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1" fill="currentColor"/></symbol>
+  <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="3" y="5.3" width="18" height="13.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.6 6.8 12 13l8.4-6.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-whatsapp" viewBox="0 0 24 24"><path d="M12 3.2a8.8 8.8 0 0 0-7.6 13.2L3 21l4.7-1.2A8.8 8.8 0 1 0 12 3.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.6 8.7c.3-.6.5-.6.8-.6h.5c.2 0 .4 0 .5.4.2.5.6 1.5.6 1.7s0 .3-.1.4c-.1.2-.2.3-.4.5-.2.2-.3.3-.1.5.2.4.9 1.4 1.9 2.2 1.3 1 1.8 1.2 2.1 1.1.3-.1.5-.5.7-.8.2-.2.4-.2.6-.1l1.4.7c.2.1.3.2.3.4 0 .5-.5 1.3-1 1.5-.5.2-1 .3-2.2-.1-1.6-.5-3.1-1.8-4.2-3.4-.7-1-1.1-1.7-1.2-2.4-.1-.6 0-1 .3-1.4Z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="icon-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></symbol>
+  <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="M9 5.5 15.5 12 9 18.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4.5 12h15M13.5 6 19.5 12 13.5 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="icon-court" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><line x1="12" y1="4" x2="12" y2="20" stroke="currentColor" stroke-width="1.8"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><line x1="15.3" y1="15.3" x2="20.5" y2="20.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 10.5V7.8a4.5 4.5 0 0 1 9 0v2.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="15" r="1.6" fill="currentColor"/></symbol>
+</svg>
+
+<!-- ============================================================
+     Acceso general a la liga -- pantalla completa, visible por defecto
+     en el HTML crudo (antes de que corra ningún JS) para que nunca haya
+     un parpadeo mostrando la app antes de decidir si hace falta pedir la
+     contraseña. app.js decide, apenas arranca, si la oculta (ya hay un
+     acceso guardado y válido) o la deja así.
+     ============================================================ -->
+<div class="access-gate" id="access-gate">
+  <div class="access-card">
+    <img src="logo.png" alt="MASTER PÁDEL 360" class="access-logo" onerror="this.hidden=true">
+    <span class="access-ic"><svg class="ic"><use href="#icon-lock"/></svg></span>
+    <h1 class="access-title">Acceso Liga Master Pádel 360</h1>
+    <p class="access-sub">Ingresá la contraseña de la liga para continuar.</p>
+    <div class="rsv-field">
+      <label for="accesoClave">Contraseña</label>
+      <input type="password" id="accesoClave" autocomplete="current-password" placeholder="••••••••">
+    </div>
+    <p class="rsv-error" id="access-error" hidden></p>
+    <button class="doc-card-btn" id="accesoBtn" type="button">ENTRAR A LA LIGA</button>
+  </div>
+</div>
+
+<div id="app" hidden>
+
+  <main class="body" id="body">
+
+    <!-- ============ INICIO ============ -->
+    <section class="screen screen-flush" id="screen-inicio">
+
+      <div class="hero">
+        <div class="hero-top">
+          <span class="hero-eyebrow">— Torneo Apertura 2026 —</span>
+          <img src="logo.png" alt="MASTER PÁDEL 360" class="hero-logo" onerror="this.hidden=true">
+          <h1 class="hero-title">LIGA MASTER <span class="gold">PÁDEL</span> 360</h1>
+          <p class="hero-tagline">Competí. Sumá puntos. Divertite.</p>
+          <span class="hero-status" id="hero-status" hidden></span>
+        </div>
+        <div class="hero-photo">
+          <div class="hero-bg"></div>
+          <div class="hero-scrim"></div>
+        </div>
+      </div>
+
+      <div class="screen-pad">
+        <section class="cat-select-block" id="cat-select-block">
+          <button class="cat-select-cta" id="cat-select-cta">
+            <span class="cat-select-cta-tx">
+              <span class="cat-select-title">Seleccioná tu categoría</span>
+              <span class="cat-select-sub">Elegí tu categoría para personalizar toda la experiencia.</span>
+            </span>
+            <span class="cat-select-cta-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div class="cat-select-expanded" id="cat-select-expanded" hidden>
+            <h2 class="cat-select-title">Seleccioná tu categoría</h2>
+            <p class="cat-select-sub">Elegí tu categoría para personalizar toda la experiencia.</p>
+            <div class="cat-chips" id="inicioCats"></div>
+          </div>
+          <button class="cat-active-row" id="cat-active-row" hidden>
+            <span class="cat-active-label">Categoría activa</span>
+            <span class="cat-active-value" id="cat-active-value"></span>
+            <span class="cat-active-chevron" aria-hidden="true">▾</span>
+          </button>
+        </section>
+
+        <button class="rsv-cta-card" data-go="reservar">
+          <span class="rsv-cta-ic"><svg class="ic"><use href="#icon-court"/></svg></span>
+          <span class="rsv-cta-tx">
+            <b>Reservá tu cancha</b>
+            <span>Elegí día y horario para tu próximo partido</span>
+          </span>
+          <span class="rsv-cta-arrow"><svg class="ic"><use href="#icon-arrow"/></svg></span>
+        </button>
+
+        <div id="novedades"></div>
+
+        <!-- Banner de comunidad: usa la primera foto real de GALERIA si existe.
+             Si todavía no cargaste ninguna foto, queda oculto solo (no se ve
+             un cartel vacío ni una imagen rota). -->
+        <button class="community-banner" id="community-banner" data-go="fotos" hidden>
+          <div class="community-bg" id="community-bg"></div>
+          <div class="community-tx">
+            <b>Más que una liga</b>
+            <span>Pádel · Amigos · Comunidad</span>
+          </div>
+          <span class="community-arrow"><svg class="ic"><use href="#icon-arrow"/></svg></span>
+        </button>
+
+        <div class="sponsor-strip" id="ini-sponsors" hidden>
+          <div class="sponsor-strip-head">
+            <span class="sponsor-strip-lbl">Sponsors oficiales</span>
+            <button class="sponsor-strip-link" data-go="sponsors">Ver todos</button>
+          </div>
+          <div class="sponsor-row" id="ini-sponsors-logos"></div>
+        </div>
+
+        <div class="social-row">
+          <a class="social-link" href="https://www.instagram.com/masterpadelcba/" target="_blank" rel="noopener" aria-label="Seguinos en Instagram">
+            <svg class="ic" aria-hidden="true"><use href="#icon-instagram"/></svg>
+            <span>Instagram</span>
+          </a>
+          <a class="social-link" href="https://wa.me/5493516234487" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">
+            <svg class="ic" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+            <span>WhatsApp</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ POSICIONES ============ -->
+    <section class="screen" id="screen-posiciones" hidden>
+      <header class="screen-brand">
+        <img src="logo.png" alt="MASTER PÁDEL 360" class="screen-brand-logo" onerror="this.hidden=true">
+        <span class="screen-brand-tx">MASTER <span class="gold">PÁDEL</span> 360</span>
+      </header>
+      <div class="screen-head">
+        <h1>Posiciones</h1>
+        <p>Tabla en vivo — fase de grupos</p>
+      </div>
+      <div class="standings-head">
+        <span class="sh-rank">Pos</span><span class="sh-pareja">Pareja</span>
+        <span class="sh-num">PJ</span><span class="sh-num">PG</span><span class="sh-num">PP</span>
+        <span class="sh-pts">Pts</span>
+      </div>
+      <div id="posRows"><div class="state-loading">Cargando…</div></div>
+      <p class="hint-line">Tocá una pareja para ver sets y games a favor / en contra</p>
+    </section>
+
+    <!-- ============ FIXTURE ============ -->
+    <section class="screen" id="screen-fixture" hidden>
+      <header class="screen-brand">
+        <img src="logo.png" alt="MASTER PÁDEL 360" class="screen-brand-logo" onerror="this.hidden=true">
+        <span class="screen-brand-tx">MASTER <span class="gold">PÁDEL</span> 360</span>
+      </header>
+      <div class="screen-head">
+        <h1>Fixture</h1>
+        <p>Todos contra todos</p>
+      </div>
+      <div class="fecha-chips" id="fixFechas"></div>
+      <div id="fixMatches"><div class="state-loading">Cargando…</div></div>
+    </section>
+
+    <!-- ============ RESULTADOS ============ -->
+    <section class="screen" id="screen-resultados" hidden>
+      <header class="screen-brand">
+        <img src="logo.png" alt="MASTER PÁDEL 360" class="screen-brand-logo" onerror="this.hidden=true">
+        <span class="screen-brand-tx">MASTER <span class="gold">PÁDEL</span> 360</span>
+      </header>
+      <div class="screen-head">
+        <h1>Resultados</h1>
+        <p>Partidos ya jugados</p>
+      </div>
+      <div id="resMatches"><div class="state-loading">Cargando…</div></div>
+    </section>
+
+    <!-- ============ MÁS ============ -->
+    <section class="screen" id="screen-mas" hidden>
+      <header class="screen-brand">
+        <img src="logo.png" alt="MASTER PÁDEL 360" class="screen-brand-logo" onerror="this.hidden=true">
+        <span class="screen-brand-tx">MASTER <span class="gold">PÁDEL</span> 360</span>
+      </header>
+      <div class="screen-head">
+        <h1>Más</h1>
+        <p>Todo lo que necesitás</p>
+      </div>
+      <div class="more-list">
+        <button class="more-item is-featured" data-go="reservar"><span class="mi-ic"><svg class="ic"><use href="#icon-court"/></svg></span><span class="mi-tx">Reservar turno</span><svg class="ic mi-chev"><use href="#icon-chevron"/></svg></button>
+        <button class="more-item" data-go="buscar-reserva"><span class="mi-ic"><svg class="ic"><use href="#icon-search"/></svg></span><span class="mi-tx">Buscar mi reserva</span><svg class="ic mi-chev"><use href="#icon-chevron"/></svg></button>
+        <button class="more-item" data-go="reglamento"><span class="mi-ic"><svg class="ic"><use href="#icon-book"/></svg></span><span class="mi-tx">Reglamento</span><svg class="ic mi-chev"><use href="#icon-chevron"/></svg></button>
+        <button class="more-item" data-go="premios"><span class="mi-ic"><svg class="ic"><use href="#icon-medal"/></svg></span><span class="mi-tx">Premios</span><svg class="ic mi-chev"><use href="#icon-chevron"/></svg></button>
+        <button class="more-item" data-go="playoffs"><span class="mi-ic"><svg class="ic"><use href="#icon-users"/></svg></span><span class="mi-tx">Playoffs</span><svg class="ic mi-chev"><use href="#icon-chevron"/></svg></button>
+        <button class="more-item" data-go="fotos"><span class="mi-ic"><svg class="ic"><use href="#icon-image"/></svg></span><span class="mi-tx">Galería</span><svg class="ic mi-chev"><use href="#icon-chevron"/></svg></button>
+        <button class="more-item" data-go="sponsors"><span class="mi-ic"><svg class="ic"><use href="#icon-heart"/></svg></span><span class="mi-tx">Sponsors</span><svg class="ic mi-chev"><use href="#icon-chevron"/></svg></button>
+        <button class="more-item" data-go="sobre-liga"><span class="mi-ic"><svg class="ic"><use href="#icon-info"/></svg></span><span class="mi-tx">Sobre la liga</span><svg class="ic mi-chev"><use href="#icon-chevron"/></svg></button>
+        <button class="more-item" data-go="contacto"><span class="mi-ic"><svg class="ic"><use href="#icon-mail"/></svg></span><span class="mi-tx">Contacto</span><svg class="ic mi-chev"><use href="#icon-chevron"/></svg></button>
+      </div>
+    </section>
+
+    <!-- ============ PLAYOFFS ============ -->
+    <section class="screen" id="screen-playoffs" hidden>
+      <header class="screen-brand">
+        <img src="logo.png" alt="MASTER PÁDEL 360" class="screen-brand-logo" onerror="this.hidden=true">
+        <span class="screen-brand-tx">MASTER <span class="gold">PÁDEL</span> 360</span>
+      </header>
+      <button class="back-row" data-go="mas"><svg class="ic ic-sm"><use href="#icon-chevron"/></svg> Más</button>
+      <div class="screen-head">
+        <h1>Playoffs</h1>
+        <p>Fase final del torneo</p>
+      </div>
+      <div class="bracket-card">
+        <svg viewBox="0 0 260 150" role="img" aria-label="Llave de playoffs a seis parejas, todavía bloqueada">
+          <g stroke="var(--border)" stroke-width="1.5" fill="none">
+            <line x1="16" y1="18" x2="60" y2="18"/><line x1="16" y1="42" x2="60" y2="42"/>
+            <line x1="60" y1="18" x2="60" y2="30"/><line x1="60" y1="42" x2="60" y2="30"/><line x1="60" y1="30" x2="104" y2="30"/>
+            <line x1="16" y1="108" x2="60" y2="108"/><line x1="16" y1="132" x2="60" y2="132"/>
+            <line x1="60" y1="108" x2="60" y2="120"/><line x1="60" y1="132" x2="60" y2="120"/><line x1="60" y1="120" x2="104" y2="120"/>
+            <line x1="104" y1="30" x2="104" y2="75"/><line x1="104" y1="120" x2="104" y2="75"/><line x1="104" y1="75" x2="150" y2="75"/>
+          </g>
+          <g fill="var(--text-faint)" font-family="Barlow" font-weight="600" font-size="7" letter-spacing=".04em">
+            <text x="16" y="12">3° / 6° · 4° / 5°</text>
+            <text x="62" y="27">SEMIFINALES</text>
+            <text x="152" y="78">FINAL</text>
+          </g>
+          <circle cx="162" cy="75" r="13" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+          <text x="162" y="79" text-anchor="middle" font-size="11">🔒</text>
+        </svg>
+        <span class="soon-pill" id="playoffs-pill">Próximamente</span>
+        <p class="bracket-caption" id="playoffs-mensaje">Se habilita cuando termine la fase de grupos de cada categoría.</p>
+      </div>
+      <div class="reg-block">
+        <b>Formato Top 6 (fase final)</b>
+        <p>1° y 2° pasan directo a semifinales. 3° vs 6° y 4° vs 5° definen a los otros dos semifinalistas: 1° vs ganador 4°/5°, y 2° vs ganador 3°/6°. Todos los cruces son a partido único, y la final corona al campeón.</p>
+      </div>
+    </section>
+
+    <!-- ============ FOTOS ============ -->
+    <section class="screen" id="screen-fotos" hidden>
+      <button class="back-row" data-go="mas"><svg class="ic ic-sm"><use href="#icon-chevron"/></svg> Más</button>
+      <div class="screen-head">
+        <h1>Fotos</h1>
+        <p>Galería de la liga</p>
+      </div>
+      <div class="filter-chips" id="fotosFiltros"></div>
+      <div class="photo-grid" id="fotosGrid"><div class="state-loading">Cargando…</div></div>
+    </section>
+
+    <!-- ============ REGLAMENTO ============ -->
+    <!-- El reglamento es el PDF oficial completo (Reglamento_Master_Padel_2026.pdf,
+         en la raíz del sitio, sin transcribir ni resumir): esta pantalla solo
+         ofrece verlo y descargarlo, no reproduce su contenido en HTML. -->
+    <section class="screen" id="screen-reglamento" hidden>
+      <button class="back-row" data-go="mas"><svg class="ic ic-sm"><use href="#icon-chevron"/></svg> Más</button>
+      <div class="screen-head">
+        <h1>Reglamento oficial</h1>
+        <p>Liga Master Pádel 360 · 2026</p>
+      </div>
+      <div class="doc-card">
+        <span class="doc-card-ic"><svg class="ic"><use href="#icon-book"/></svg></span>
+        <a class="doc-card-btn" href="Reglamento_Master_Padel_2026.pdf" target="_blank" rel="noopener">Ver reglamento completo</a>
+        <a class="doc-card-download" href="Reglamento_Master_Padel_2026.pdf" download>Descargar PDF</a>
+      </div>
+    </section>
+
+    <!-- ============ PREMIOS ============ -->
+    <section class="screen" id="screen-premios" hidden>
+      <button class="back-row" data-go="mas"><svg class="ic ic-sm"><use href="#icon-chevron"/></svg> Más</button>
+      <div class="screen-head">
+        <h1>Premios</h1>
+        <p>Lo que se juega la liga</p>
+      </div>
+      <div id="premios-bloques"><div class="state-loading">Cargando…</div></div>
+    </section>
+
+    <!-- ============ SPONSORS ============ -->
+    <section class="screen" id="screen-sponsors" hidden>
+      <button class="back-row" data-go="mas"><svg class="ic ic-sm"><use href="#icon-chevron"/></svg> Más</button>
+      <div class="screen-head">
+        <h1>Sponsors</h1>
+        <p>Quiénes apoyan la liga</p>
+      </div>
+      <div class="sponsor-feature" id="sponsor-destacado" hidden>
+        <div class="sponsor-feature-logo" id="sponsor-destacado-logo">LOGO</div>
+        <div><b id="sponsor-destacado-nombre"></b><span>Auspicia la temporada</span></div>
+      </div>
+      <div class="sponsor-row wrap" id="sponsor-resto"></div>
+      <p class="state-empty" id="sponsors-empty" hidden>Todavía no hay sponsors cargados.</p>
+    </section>
+
+    <!-- ============ SOBRE LA LIGA (contenido estático, editable a mano) ============ -->
+    <section class="screen" id="screen-sobre-liga" hidden>
+      <button class="back-row" data-go="mas"><svg class="ic ic-sm"><use href="#icon-chevron"/></svg> Más</button>
+      <div class="screen-head">
+        <h1>Sobre la liga</h1>
+        <p>Quiénes somos</p>
+      </div>
+      <div class="reg-block">
+        <!--
+          Este bloque es texto fijo en el HTML, no viene de Google Sheets.
+          Editalo con confianza: es tuyo, no lo va a pisar ningún cambio
+          desde la planilla. Lo redacté con lo que ya sabía de tu liga;
+          revisalo y ajustalo si algo no es exactamente así.
+        -->
+        <p>Master Pádel 360 es una liga de pádel amateur organizada en Córdoba, pensada para competir en serio sin perder el buen ambiente. Jugamos por categorías femeninas y masculinas, de 6ta a 8va, con una temporada que corre de septiembre a diciembre en Espacio La 10.</p>
+        <p style="margin-top:10px">La idea es simple: competencia organizada, transparente y con juego limpio, donde el resultado se construye fecha a fecha hasta llegar a los playoffs.</p>
+      </div>
+    </section>
+
+    <!-- ============ CONTACTO (contenido estático, editable a mano) ============ -->
+    <section class="screen" id="screen-contacto" hidden>
+      <button class="back-row" data-go="mas"><svg class="ic ic-sm"><use href="#icon-chevron"/></svg> Más</button>
+      <div class="screen-head">
+        <h1>Contacto</h1>
+        <p>Hablemos</p>
+      </div>
+      <div class="more-list">
+        <!-- Reemplazá los href de abajo por tu número/usuario reales -->
+        <a class="more-item" href="https://wa.me/5490000000000" target="_blank" rel="noopener">
+          <span class="mi-ic"><svg class="ic"><use href="#icon-whatsapp"/></svg></span>
+          <span class="mi-tx">WhatsApp</span>
+          <svg class="ic mi-chev"><use href="#icon-chevron"/></svg>
+        </a>
+        <a class="more-item" href="https://instagram.com/masterpadel360" target="_blank" rel="noopener">
+          <span class="mi-ic"><svg class="ic"><use href="#icon-instagram"/></svg></span>
+          <span class="mi-tx">Instagram</span>
+          <svg class="ic mi-chev"><use href="#icon-chevron"/></svg>
+        </a>
+      </div>
+      <p class="hint-line">¿Cambiaste de número o de usuario? Editá los links de este bloque directo en index.html.</p>
+    </section>
+
+    <!-- ============ RESERVAR TURNO ============ -->
+    <!-- Wizard de un solo screen con 4 pasos internos, manejados por JS
+         (rsv-panel-*). Habla con RESERVAS_API_URL (Reservas API), un
+         proyecto de Apps Script separado -- nunca con API_URL. -->
+    <section class="screen" id="screen-reservar" hidden>
+      <header class="screen-brand">
+        <img src="logo.png" alt="MASTER PÁDEL 360" class="screen-brand-logo" onerror="this.hidden=true">
+        <span class="screen-brand-tx">MASTER <span class="gold">PÁDEL</span> 360</span>
+      </header>
+      <button class="back-row" data-go="mas"><svg class="ic ic-sm"><use href="#icon-chevron"/></svg> Más</button>
+      <div class="screen-head">
+        <h1>Reservar turno</h1>
+        <p>Elegí tu cruce y aseguralo con la seña</p>
+      </div>
+
+      <div class="rsv-steps" id="rsv-steps">
+        <span class="rsv-step" data-step="categoria"></span>
+        <span class="rsv-step" data-step="cruce"></span>
+        <span class="rsv-step" data-step="turno"></span>
+        <span class="rsv-step" data-step="checkout"></span>
+      </div>
+
+      <!-- PASO 1: categoría -->
+      <div class="rsv-panel" id="rsv-panel-categoria">
+        <h2 class="rsv-panel-title">Elegí tu categoría</h2>
+        <div class="cat-chips" id="rsvCats"></div>
+      </div>
+
+      <!-- PASO 2: cruce -->
+      <div class="rsv-panel" id="rsv-panel-cruce" hidden>
+        <button class="rsv-back" data-rsv-back="categoria">‹ Categoría</button>
+        <h2 class="rsv-panel-title">Elegí tu cruce</h2>
+        <div id="rsvCruces"><div class="state-loading">Cargando…</div></div>
+      </div>
+
+      <!-- PASO 3: día + horario -->
+      <div class="rsv-panel" id="rsv-panel-turno" hidden>
+        <button class="rsv-back" data-rsv-back="cruce">‹ Cruce</button>
+        <h2 class="rsv-panel-title">Elegí día y horario</h2>
+        <p class="hint-line" id="rsv-turno-hint">La cancha exacta se asigna al confirmar.</p>
+        <div id="rsvDias"><div class="state-loading">Cargando…</div></div>
+      </div>
+
+      <!-- PASO 4: checkout (retención activa) -->
+      <div class="rsv-panel" id="rsv-panel-checkout" hidden>
+        <div class="rsv-hold-banner">
+          <span class="rsv-hold-lbl">Turno retenido</span>
+          <span class="rsv-hold-timer" id="rsv-hold-timer">10:00</span>
+        </div>
+        <div class="rsv-summary" id="rsv-summary"></div>
+
+        <h2 class="rsv-panel-title">Tus datos</h2>
+        <div class="rsv-field">
+          <label for="rsvNombre">Nombre y apellido</label>
+          <input type="text" id="rsvNombre" maxlength="120" placeholder="Ej: Juan Pérez" autocomplete="name">
+        </div>
+        <div class="rsv-field">
+          <label for="rsvTelefono">Teléfono</label>
+          <input type="tel" id="rsvTelefono" maxlength="40" placeholder="Ej: 3511234567" autocomplete="tel">
+        </div>
+
+        <h2 class="rsv-panel-title">Seña para confirmar</h2>
+        <div class="rsv-pago-card">
+          <div class="rsv-pago-row"><span>Valor total del turno</span><b>$36.000</b></div>
+          <div class="rsv-pago-row highlight"><span>Reserva para confirmar</span><b>$9.000</b></div>
+          <div class="rsv-pago-row"><span>Saldo pendiente</span><b>$27.000</b></div>
+          <div class="rsv-alias-row">
+            <div>
+              <span class="rsv-alias-lbl">Alias para transferir</span>
+              <span class="rsv-alias-value">masterpadel.360</span>
+            </div>
+            <button class="rsv-copy-btn" id="rsvCopyAlias" type="button">Copiar alias</button>
+          </div>
+        </div>
+
+        <h2 class="rsv-panel-title">Comprobante de la seña</h2>
+        <label class="rsv-upload" id="rsvUploadLabel">
+          <input type="file" id="rsvComprobante" accept="image/jpeg,image/png" hidden>
+          <span class="rsv-upload-ic"><svg class="ic"><use href="#icon-image"/></svg></span>
+          <span class="rsv-upload-tx" id="rsvUploadTx">Subí una captura de pantalla del comprobante (JPG o PNG, máx. 5 MB)</span>
+        </label>
+
+        <p class="rsv-error" id="rsv-checkout-error" hidden></p>
+        <div id="rsv-checkout-err-actions" hidden>
+          <button class="rsv-back" id="rsvElegirOtroTurno">Elegir otro turno</button>
+        </div>
+        <button class="doc-card-btn rsv-confirm-btn" id="rsvConfirmarBtn" type="button">Confirmar reserva</button>
+      </div>
+
+      <!-- PASO FINAL: solicitud enviada (queda PENDIENTE_APROBACION -- ya
+           NO es una reserva confirmada todavía, ver app.js) -->
+      <div class="rsv-panel" id="rsv-panel-exito" hidden>
+        <div class="rsv-exito-ic">⏳</div>
+        <h2 class="rsv-panel-title center">Solicitud enviada</h2>
+        <p class="rsv-pendiente-note">Tu turno quedó bloqueado y está pendiente de aprobación.</p>
+        <div class="rsv-summary" id="rsv-exito-resumen"></div>
+
+        <div class="rsv-codigo-card">
+          <span class="rsv-codigo-lbl">Código de tu reserva</span>
+          <span class="rsv-codigo-value" id="rsv-exito-codigo"></span>
+          <button class="rsv-copy-btn" id="rsvCopyCodigo" type="button">Copiar código</button>
+        </div>
+        <p class="rsv-privado-note">Guardá este código para volver a acceder a tu reserva.</p>
+
+        <a class="rsv-whatsapp-btn" id="rsvWhatsappLink" href="#" target="_blank" rel="noopener">
+          <svg class="ic" aria-hidden="true"><use href="#icon-whatsapp"/></svg>
+          <span>ENVIAR RESERVA POR WHATSAPP</span>
+        </a>
+        <p class="hint-line">Así nos llega el aviso y te queda el código guardado en el chat.</p>
+
+        <a class="doc-card-btn" id="rsvGestionarLink" href="#">Gestionar mi reserva</a>
+        <p class="rsv-privado-note">Este enlace es privado y personal. No lo compartas.</p>
+        <button class="back-row" id="rsvVolverAReservar" type="button">‹ Volver a Reservas</button>
+        <button class="back-row" data-go="mas">Volver a Más</button>
+      </div>
+    </section>
+
+    <!-- ============ BUSCAR MI RESERVA (teléfono + código, sin link) ============ -->
+    <section class="screen" id="screen-buscar-reserva" hidden>
+      <header class="screen-brand">
+        <img src="logo.png" alt="MASTER PÁDEL 360" class="screen-brand-logo" onerror="this.hidden=true">
+        <span class="screen-brand-tx">MASTER <span class="gold">PÁDEL</span> 360</span>
+      </header>
+      <button class="back-row" data-go="mas"><svg class="ic ic-sm"><use href="#icon-chevron"/></svg> Más</button>
+      <div class="screen-head">
+        <h1>Buscar mi reserva</h1>
+        <p>Sin el link, con teléfono y código</p>
+      </div>
+      <div class="rsv-field">
+        <label for="buscarTelefono">Teléfono usado en la reserva</label>
+        <input type="tel" id="buscarTelefono" maxlength="40" placeholder="Ej: 3511234567" autocomplete="tel">
+      </div>
+      <div class="rsv-field">
+        <label for="buscarCodigo">Código de la reserva</label>
+        <input type="text" id="buscarCodigo" maxlength="12" placeholder="Ej: A3B7K9QZ" autocapitalize="characters" autocomplete="off">
+      </div>
+      <p class="rsv-error" id="buscar-reserva-error" hidden></p>
+      <button class="doc-card-btn" id="buscarReservaBtn" type="button">Buscar mi reserva</button>
+      <p class="hint-line">Los dos datos tienen que ser de la misma reserva.</p>
+    </section>
+
+    <!-- ============ GESTIÓN DE RESERVA (vía ?token=...) ============ -->
+    <section class="screen" id="screen-reserva-gestion" hidden>
+      <header class="screen-brand">
+        <img src="logo.png" alt="MASTER PÁDEL 360" class="screen-brand-logo" onerror="this.hidden=true">
+        <span class="screen-brand-tx">MASTER <span class="gold">PÁDEL</span> 360</span>
+      </header>
+      <div class="screen-head">
+        <h1>Tu reserva</h1>
+        <p>Gestión privada del turno</p>
+      </div>
+      <div id="rsvGestionContenido"><div class="state-loading">Cargando…</div></div>
+    </section>
+
+    <!-- ============ ADMIN: reservas pendientes (vía ?admin=1) ============ -->
+    <!-- Sin link en ningún menú a propósito -- solo se entra escribiendo
+         ?admin=1 en la URL. Pide una contraseña propia, separada de la
+         contraseña general de acceso (ver app.js / CodigoReservasAPI.gs). -->
+    <section class="screen" id="screen-admin-reservas" hidden>
+      <header class="screen-brand">
+        <img src="logo.png" alt="MASTER PÁDEL 360" class="screen-brand-logo" onerror="this.hidden=true">
+        <span class="screen-brand-tx">MASTER <span class="gold">PÁDEL</span> 360 · ADMIN</span>
+      </header>
+      <a class="back-row" href="./">‹ Salir del panel</a>
+      <div class="screen-head">
+        <h1>Reservas pendientes</h1>
+        <p>Aprobar o rechazar solicitudes</p>
+      </div>
+
+      <div id="admin-gate">
+        <div class="rsv-field">
+          <label for="adminClave">Contraseña de administrador</label>
+          <input type="password" id="adminClave" autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <p class="rsv-error" id="admin-gate-error" hidden></p>
+        <button class="doc-card-btn" id="adminEntrarBtn" type="button">Entrar</button>
+      </div>
+
+      <div id="admin-panel" hidden>
+        <button class="rsv-copy-btn" id="adminRefrescarBtn" type="button">Actualizar lista</button>
+        <div id="adminPendientesLista"><div class="state-loading">Cargando…</div></div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegación principal">
+    <button class="nav-item" data-nav="inicio" data-go="inicio"><svg class="ic"><use href="#icon-home"/></svg><span class="ni-lb">Inicio</span></button>
+    <button class="nav-item" data-nav="posiciones" data-go="posiciones"><svg class="ic"><use href="#icon-chart"/></svg><span class="ni-lb">Posic.</span></button>
+    <button class="nav-item" data-nav="fixture" data-go="fixture"><svg class="ic"><use href="#icon-calendar"/></svg><span class="ni-lb">Fixture</span></button>
+    <button class="nav-item" data-nav="resultados" data-go="resultados"><svg class="ic"><use href="#icon-trophy"/></svg><span class="ni-lb">Result.</span></button>
+    <button class="nav-item" data-nav="mas" data-go="mas"><svg class="ic"><use href="#icon-more"/></svg><span class="ni-lb">Más</span></button>
+  </nav>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

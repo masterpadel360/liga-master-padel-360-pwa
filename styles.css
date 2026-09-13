@@ -1,0 +1,684 @@
+/* ============================================================
+   LIGA MASTER PÁDEL 360 — tokens de marca
+   Negro/grafito + dorado (el mismo dorado del logo oficial), blanco
+   para lo importante, gris para lo secundario. El dorado se usa con
+   moderación: CTA, ganador, posición, categoría activa, ícono activo.
+   ============================================================ */
+:root{
+  --bg:#0a0a0c;
+  --bg-soft:#111114;
+  --surface: rgba(255,255,255,.05);
+  --surface-strong: rgba(255,255,255,.08);
+  --border: rgba(255,255,255,.10);
+  --border-strong: rgba(255,255,255,.18);
+
+  --gold:#e6a83c;
+  --gold-light:#ffd873;
+  --gold-dim: rgba(230,168,60,.16);
+  --gold-ink:#1c1300;
+
+  --text:#f7f6f3;
+  --text-dim:#9a9a9e;
+  --text-faint:#65656a;
+
+  --warn:#ffb648;
+  --warn-bg: rgba(255,182,72,.15);
+
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:10px;
+  --shadow-card: 0 16px 34px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+  font-family:'Barlow',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;text-align:left}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+h1,h2{margin:0;font-family:'Barlow Condensed',sans-serif}
+.ic{width:22px;height:22px;flex-shrink:0;display:inline-block;vertical-align:middle}
+.ic-sm{width:16px;height:16px}
+.gold{color:var(--gold)}
+
+/* ---------- layout shell ---------- */
+#app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+@media (min-width:481px){
+  body{background:#000}
+  #app{box-shadow:0 0 90px rgba(0,0,0,.7);min-height:100vh}
+}
+/* Desktop: el hero usa todo el ancho ensanchado de #app (texto izquierda /
+   logo grande derecha). El resto del contenido -- Inicio incluido, salvo
+   el hero -- se recentra a 520px para verse exactamente como en mobile,
+   solo que centrado con más aire alrededor. No afecta un celular en
+   ningún caso: por debajo de 900px de ancho, nada de este bloque aplica. */
+@media (min-width:900px){
+  #app{max-width:1100px}
+  .screen:not(.screen-flush){max-width:520px;margin-left:auto;margin-right:auto;width:100%}
+  .screen-pad{max-width:520px;margin-left:auto;margin-right:auto;width:100%}
+}
+
+.body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+.screen{display:flex;flex-direction:column;gap:16px;padding:10px 16px 32px;animation:fade-in .18s ease}
+.screen.screen-flush{padding:0 0 28px}
+@keyframes fade-in{from{opacity:0}to{opacity:1}}
+
+.screen-pad{display:flex;flex-direction:column;gap:16px;padding:18px 16px 0}
+.screen-head h1{font-size:1.55rem;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.screen-head p{margin:2px 0 0;color:var(--text-dim);font-size:.85rem}
+
+/* ---------- header de marca (pantallas internas) ----------
+   Fino a propósito: logo chico + wordmark + una línea sutil abajo.
+   Los márgenes negativos cancelan el padding de .screen para que la
+   línea llegue de borde a borde, como un header real. */
+.screen-brand{
+  display:flex;align-items:center;gap:9px;
+  margin:-10px -16px 4px;padding:13px 16px 12px;
+  border-bottom:1px solid var(--border);
+}
+.screen-brand-logo{height:20px;width:auto;object-fit:contain;flex-shrink:0}
+.screen-brand-tx{
+  font-family:'Barlow Condensed';font-weight:800;font-size:.76rem;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--text-dim);
+}
+
+/* ---------- hero (Inicio) ----------
+   Dos bloques apilados, no uno solo:
+   1) .hero-top: negro sólido y limpio, sin foto. Acá vive toda la
+      marca (logo grande, título, tagline, fecha) bien arriba y
+      separada de la cancha -- el logo nunca queda "metido" dentro
+      de la foto.
+   2) .hero-photo: la foto (hero-liga.png) recién empieza después,
+      un poco más abajo. hero-liga.png es un cuadrado (2048x2048)
+      con ~55% superior en negro puro y el resto la cancha con los
+      jugadores; acá se muestra solo el tramo inferior de esa foto
+      (ver comentario en .hero-photo), así que lo primero que se ve
+      todavía es negro -- funde sin costura con .hero-top de arriba,
+      porque los dos son el mismo negro -- y la cancha aparece recién
+      al hacer scroll, como una segunda escena, no pegada debajo del
+      logo.
+   ---------------------------------------------------------------- */
+.hero{position:relative;background:var(--bg)}
+
+.hero-top{
+  position:relative;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;
+  min-height:94vh;max-height:840px;
+  padding:clamp(28px,8vw,48px) 20px clamp(22px,6vw,34px);
+}
+.hero-eyebrow{
+  font-size:.66rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);
+}
+.hero-logo{
+  width:clamp(180px,50vw,240px);height:auto;object-fit:contain;margin:clamp(14px,4.5vw,22px) 0;
+  filter:drop-shadow(0 14px 30px rgba(0,0,0,.55)) drop-shadow(0 0 46px rgba(230,168,60,.2));
+}
+.hero-title{
+  font-size:clamp(1.14rem,5vw,1.4rem);line-height:1.1;font-weight:800;letter-spacing:.02em;
+  text-transform:uppercase;white-space:nowrap;
+}
+.hero-tagline{margin:8px 0 0;color:var(--text-dim);font-size:.86rem}
+/* Etiqueta secundaria y sutil: nunca domina el hero. */
+.hero-status{
+  display:inline-flex;align-items:center;gap:6px;font-family:'Barlow Condensed';font-weight:700;
+  margin-top:14px;font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;color:var(--gold);
+  background:transparent;border:1px solid rgba(230,168,60,.4);padding:5px 13px;border-radius:999px;
+}
+
+/* Contenedor más alto que ancho (retrato): con cover, ese ratio recorta
+   solo los bordes laterales (que ya son negros) y preserva TODA la
+   altura real de la foto -- los 4 jugadores, la cartelería del fondo y
+   la red quedan completos, nada de franja recortada. El filtro de
+   brillo/contraste es puramente de presentación (no toca el archivo):
+   la mitad de la cancha donde están los jugadores del fondo es
+   naturalmente muy oscura en la foto original, y esto recupera detalle
+   ahí sin lavar la zona ya bien iluminada de los jugadores de adelante. */
+.hero-photo{position:relative;overflow:hidden;aspect-ratio:3/4;max-height:640px}
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('hero-liga.png') center top/cover no-repeat, var(--bg);
+  filter:brightness(1.22) contrast(1.04);
+}
+/* Dos velos largos y progresivos, solo en los extremos -- una curva de
+   varios pasos (no una rampa lineal corta), para que la disolución se
+   sienta cinematográfica y no como un corte. Arriba: cae dentro del
+   primer ~28% de .hero-photo, que en la foto real todavía es negro
+   puro (0-55% de hero-liga.png), así que no tapa nada -- solo asegura
+   que la costura con .hero-top sea perfecta aunque la curva sea larga.
+   Abajo: se mantiene invisible hasta el 68% y recién ahí empieza a
+   ceder, muy suave al principio y más marcada sobre el final, para
+   fundirse con el negro de la interfaz sin lavar a los jugadores de
+   adelante ni la cartelería -- el 68% central de la foto queda
+   completamente limpio, sin ningún velo encima. */
+.hero-scrim{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,
+      var(--bg) 0%,
+      rgba(10,10,12,.88) 7%,
+      rgba(10,10,12,.55) 15%,
+      rgba(10,10,12,.24) 22%,
+      rgba(10,10,12,0) 30%),
+    linear-gradient(180deg,
+      rgba(10,10,12,0) 68%,
+      rgba(10,10,12,.07) 80%,
+      rgba(10,10,12,.3) 90%,
+      rgba(10,10,12,.68) 96%,
+      var(--bg) 100%);
+}
+.btn-cta{
+  margin-top:6px;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;
+  background:var(--text);color:#0a0a0c;font-weight:700;font-size:.9rem;
+  padding:13px 22px;border-radius:999px;transition:transform .12s ease;
+}
+.btn-cta:active{transform:scale(.96)}
+
+/* Celular: .hero-top ya no fuerza casi toda la altura de la pantalla.
+   Se achica al tamaño real de su contenido (logo/título/tagline/fecha)
+   más un colchón fijo de negro abajo -- ahí, y no en un vh gigante,
+   vive el "aire" antes de que arranque la cancha.
+   .hero-photo recorta el margen negro que sobra arriba (hero-liga.png
+   es negro puro hasta ~55-58%) SIN achicar a los jugadores: en vez de
+   "cover" (que liga el zoom a la altura del contenedor), se fija un
+   background-size explícito al 133.33% del ancho -- exactamente el
+   mismo zoom que daba el aspect-ratio 3/4 de antes -- y se achica solo
+   el contenedor, que ahora muestra nada más que el 45% inferior de esa
+   imagen ya escalada. Los 4 jugadores, la cartelería y la red quedan
+   del mismo tamaño de siempre, completos; lo único que se recorta es
+   negro que ya sobraba antes de ellos. Los degradados de .hero-scrim
+   no se tocan (siguen siendo las mismas reglas, en porcentaje, así que
+   se adaptan solas al nuevo alto, más corto). */
+@media (max-width:600px){
+  .hero-top{min-height:0;max-height:none;padding-bottom:95px}
+  .hero-photo{aspect-ratio:5/3;max-height:280px}
+  .hero-bg{background-size:133.334% auto;background-position:center bottom}
+}
+
+/* ---------- selección de categoría (Inicio) ---------- */
+.cat-select-block{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:16px;display:flex;flex-direction:column;gap:10px;
+  transition:border-color .2s ease, background-color .2s ease;
+}
+.cat-select-block.needs-choice{border-color:rgba(230,168,60,.55);background:var(--gold-dim)}
+.cat-select-title{font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.cat-select-sub{margin:0;font-size:.78rem;color:var(--text-dim)}
+.cat-select-block.needs-choice .cat-select-sub{color:var(--text)}
+.cat-select-expanded{display:flex;flex-direction:column;gap:10px}
+
+/* CTA colapsado: única acción visible antes de elegir categoría. Recién
+   al tocarla se despliegan los chips reales de CATEGORIAS. */
+.cat-select-cta{display:flex;align-items:center;gap:12px;width:100%}
+.cat-select-cta-tx{display:flex;flex-direction:column;gap:2px;flex:1}
+.cat-select-cta-chevron{color:var(--gold);font-size:1.2rem;line-height:1;flex-shrink:0}
+
+/* Categoría ya elegida: la sección se compacta a una sola fila discreta
+   con la categoría activa y una flecha para volver a abrir los chips. */
+.cat-select-block.is-compact{padding:12px 16px}
+.cat-active-row{display:flex;align-items:center;gap:8px;width:100%}
+.cat-active-label{font-size:.64rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.cat-active-value{font-size:.92rem;font-weight:800;color:var(--gold)}
+.cat-active-chevron{margin-left:auto;color:var(--text-dim);font-size:.9rem;line-height:1}
+
+/* Desktop: el contenedor de #app ya queda fijo en 1100px (ver arriba);
+   la franja de foto es más corta en relación al ancho porque .hero-top
+   ya no necesita tanto alto relativo -- la prioridad de diseño sigue
+   siendo el celular. */
+@media (min-width:900px){
+  .hero-top{min-height:0;max-height:none;padding-top:48px}
+  .hero-logo{width:clamp(200px,20vw,260px)}
+  .hero-title{font-size:1.7rem}
+  .hero-tagline{font-size:.95rem}
+  /* En desktop el contenedor es más ancho que alto por fuerza (no
+     tendría sentido una franja tan alta como en mobile), así que acá
+     sí hay recorte vertical -- pero mostrando la mitad inferior real
+     de la foto (50%), con margen de sobra antes de donde empiezan los
+     jugadores del fondo (~58%), para no perder nada de la escena. */
+  .hero-photo{aspect-ratio:2/1;max-height:600px}
+  .hero-bg{background-position:center bottom}
+}
+
+/* ---------- novedades ---------- */
+#novedades{display:flex;flex-direction:column;gap:8px}
+.news-card{
+  display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:12px 13px;
+}
+.news-card b{font-size:.85rem;display:block}
+.news-card span{font-size:.74rem;color:var(--text-dim)}
+
+/* ---------- banner de comunidad (foto real de GALERIA) ---------- */
+.community-banner{
+  position:relative;display:flex;align-items:flex-end;min-height:150px;border-radius:var(--radius-lg);
+  overflow:hidden;border:1px solid var(--border);width:100%;box-shadow:var(--shadow-card);
+}
+.community-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-color:var(--surface-strong)}
+.community-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(10,10,12,.05), rgba(10,10,12,.92))}
+.community-tx{position:relative;z-index:1;padding:16px;display:flex;flex-direction:column;gap:2px}
+.community-tx b{font-size:1.05rem;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.community-tx span{font-size:.76rem;color:var(--text-dim)}
+.community-arrow{
+  position:relative;z-index:1;margin:0 16px 16px auto;width:34px;height:34px;border-radius:50%;
+  background:var(--gold);color:var(--gold-ink);display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+
+/* ---------- sponsors strip (Inicio) ---------- */
+.sponsor-strip{border-top:1px solid var(--border);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.sponsor-strip-head{display:flex;align-items:center;justify-content:space-between}
+.sponsor-strip-lbl{font-size:.66rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.sponsor-strip-link{font-size:.72rem;color:var(--gold);font-weight:700}
+.sponsor-row{display:flex;gap:8px;flex-wrap:wrap}
+.sponsor-row.wrap .sponsor-chip{min-width:calc(50% - 4px)}
+.sponsor-chip{
+  flex:1;min-width:84px;height:44px;border-radius:var(--radius-sm);background:var(--surface);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:.66rem;color:var(--text-dim);font-weight:700;text-align:center;padding:0 8px;
+  background-size:60%;background-position:center;background-repeat:no-repeat;
+}
+.sponsor-chip.has-img{font-size:0;color:transparent}
+
+/* ---------- accesos sociales (Inicio) ----------
+   Monocromáticos y discretos a propósito: nada de verde WhatsApp ni
+   degradado Instagram -- misma superficie oscura y borde sutil que el
+   resto de las tarjetas de Inicio, para que se sientan parte de la web
+   y no un cartel de publicidad. */
+.social-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.social-link{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:13px;font-size:.82rem;font-weight:700;color:var(--text-dim);
+  transition:background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.social-link .ic{color:var(--text-dim);transition:color .15s ease}
+.social-link:hover, .social-link:focus-visible{color:var(--text);border-color:var(--border-strong)}
+.social-link:hover .ic, .social-link:focus-visible .ic{color:var(--gold)}
+.social-link:active{background:var(--surface-strong)}
+
+/* ---------- selector de categoría: chips horizontales ---------- */
+.cat-chips, .fecha-chips, .filter-chips{
+  display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.cat-chips::-webkit-scrollbar, .fecha-chips::-webkit-scrollbar, .filter-chips::-webkit-scrollbar{display:none}
+.chip{
+  flex-shrink:0;scroll-snap-align:start;padding:9px 15px;border-radius:999px;font-size:.8rem;
+  font-weight:700;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);
+  white-space:nowrap;
+}
+.chip.active{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
+
+/* ---------- posiciones ----------
+   Encabezado y filas comparten una única declaración de grid (mismo
+   display/columnas/gap en la misma regla): es estructuralmente
+   imposible que diverjan, porque no hay dos valores que puedan
+   desincronizarse -- hay uno solo. Las columnas numéricas tienen ancho
+   fijo (chico, porque son 1-2 dígitos) y PAREJA se lleva todo el resto
+   como 1fr. .standing-row (el contenedor real de .standing-main) tiene
+   1px de borde que .standings-head no tiene; el borde transparente de
+   abajo compensa ese espacio para que las dos grillas arranquen en el
+   mismo píxel. */
+.standings-head, .standing-main{
+  display:grid;grid-template-columns:26px 1fr 24px 24px 24px 34px;gap:3px;
+}
+.standings-head{
+  padding:0 12px;border:1px solid transparent;
+  font-size:.62rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;
+}
+/* Los 4 números (PJ/PG/PP/PTS) van todos centrados dentro de su
+   columna -- ninguno queda alineado a la derecha, para que no "parezca
+   corrido" respecto de los demás aunque su columna esté bien alineada. */
+.sh-num, .sh-pts{text-align:center}
+#posRows{display:flex;flex-direction:column;gap:6px}
+.standing-row{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  overflow:hidden;
+}
+.standing-row.top{border-color:rgba(230,168,60,.4)}
+.standing-main{
+  width:100%;align-items:center;
+  padding:11px 12px;font-variant-numeric:tabular-nums;
+}
+.standing-rank{
+  width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed';font-weight:800;font-size:.76rem;background:var(--surface-strong);color:var(--text-dim);
+}
+.standing-rank.g1{background:linear-gradient(135deg, var(--gold-light), var(--gold));color:var(--gold-ink)}
+.standing-rank.g2{background:#d7dadd;color:#12151a}
+.standing-rank.g3{background:#c98a4b;color:#1a0f04}
+.standing-pareja{font-size:.85rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.standing-num{font-size:.78rem;color:var(--text-dim);font-family:'IBM Plex Mono',monospace}
+.standing-pts{font-family:'Barlow Condensed';font-weight:800;font-size:1rem;color:var(--text)}
+.standing-num, .standing-pts{text-align:center}
+.standing-detail{
+  max-height:0;overflow:hidden;transition:max-height .2s ease;border-top:1px solid transparent;
+}
+.standing-row.open .standing-detail{max-height:90px;border-top-color:var(--border)}
+.standing-detail-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:11px 12px;text-align:center}
+.standing-detail-inner div{display:flex;flex-direction:column;gap:2px}
+.standing-detail-inner .v{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:.86rem;color:var(--text)}
+.standing-detail-inner .l{font-size:.6rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.04em}
+.hint-line{font-size:.72rem;color:var(--text-faint);text-align:center;margin:0}
+
+/* ---------- fixture / match cards ---------- */
+.match-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:13px 14px;display:flex;flex-direction:column;gap:10px;
+}
+.match-pending-tag{
+  align-self:flex-end;font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;
+  padding:3px 10px;border-radius:999px;background:var(--warn-bg);color:var(--warn);
+}
+.match-pair{display:flex;align-items:center;gap:10px}
+.avatar{
+  width:28px;height:28px;border-radius:50%;background:var(--surface-strong);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:.64rem;font-weight:800;
+  color:var(--text-dim);flex-shrink:0;
+}
+.match-pair .nm{font-size:.85rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vs-div{text-align:center;font-family:'Barlow Condensed';font-size:.68rem;color:var(--text-faint);letter-spacing:.1em}
+.bye-card{
+  border:1px dashed var(--border-strong);border-radius:var(--radius-md);padding:13px 14px;
+  display:flex;align-items:center;gap:8px;color:var(--text-dim);font-size:.82rem;
+}
+.bye-card b{color:var(--text)}
+.fecha-block-label{font-size:.68rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.06em;padding:2px 2px}
+
+/* ---------- scoreboard (fixture jugado + resultados) ---------- */
+.scoreboard{display:flex;flex-direction:column;gap:2px;border-radius:var(--radius-sm);overflow:hidden}
+.scoreboard-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface-strong)}
+.scoreboard-row.win{background:var(--gold-dim)}
+.scoreboard-row.win .avatar{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
+.scoreboard-row.win .scoreboard-nombre{color:var(--text)}
+.scoreboard-row.lose .scoreboard-nombre{color:var(--text-dim)}
+.scoreboard-nombre{flex:1;font-size:.85rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scoreboard-sets{display:flex;gap:8px;flex-shrink:0}
+.scoreboard-set{width:20px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--text-dim)}
+.scoreboard-set.mayor{color:var(--gold);font-weight:700}
+
+/* ---------- playoffs ---------- */
+.bracket-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:24px 14px;display:flex;flex-direction:column;align-items:center;gap:14px;
+}
+.bracket-card svg{width:100%;max-width:260px;height:auto}
+.soon-pill{
+  background:var(--surface-strong);border:1px solid var(--border);color:var(--text-dim);
+  font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:6px 14px;border-radius:999px;
+}
+.bracket-caption{text-align:center;font-size:.8rem;color:var(--text-dim);max-width:28ch;margin:0}
+.reg-block{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;
+}
+.reg-block b{font-size:.86rem;display:block;margin-bottom:5px}
+.reg-block p{margin:0;font-size:.82rem;color:var(--text-dim);line-height:1.5}
+
+/* ---------- reglamento (PDF oficial) ---------- */
+.doc-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:34px 20px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
+}
+.doc-card-ic{
+  width:56px;height:56px;border-radius:50%;flex-shrink:0;
+  background:var(--gold-dim);color:var(--gold);display:flex;align-items:center;justify-content:center;
+}
+.doc-card-ic .ic{width:26px;height:26px}
+.doc-card-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  background:var(--gold);color:var(--gold-ink);font-weight:800;font-size:.85rem;
+  text-transform:uppercase;letter-spacing:.03em;
+  padding:15px 22px;border-radius:999px;transition:transform .12s ease;
+}
+.doc-card-btn:active{transform:scale(.97)}
+.doc-card-download{
+  font-size:.78rem;color:var(--text-dim);font-weight:700;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.doc-card-download:hover, .doc-card-download:focus-visible{color:var(--text)}
+
+/* ---------- fotos ---------- */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.photo-swatch{
+  aspect-ratio:1;border-radius:var(--radius-sm);position:relative;overflow:hidden;
+  display:flex;align-items:flex-end;padding:6px;background:var(--surface-strong);
+}
+.photo-swatch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo-swatch::after{content:'';position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.65), transparent 55%)}
+.photo-swatch span{position:relative;z-index:1;font-size:.58rem;color:#fff;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+
+/* ---------- más / listas de acceso ---------- */
+.more-list{display:flex;flex-direction:column;gap:9px}
+.more-item{
+  display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:15px 14px;width:100%;
+}
+.mi-ic{color:var(--gold);flex-shrink:0;display:flex}
+.mi-tx{flex:1;font-size:.88rem;font-weight:700}
+.mi-chev{color:var(--text-faint)}
+.back-row{display:flex;align-items:center;gap:2px;color:var(--text-dim);font-size:.78rem;font-weight:700;padding:2px 0}
+
+.sponsor-feature{
+  display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:14px;
+}
+.sponsor-feature b{font-size:.9rem;display:block}
+.sponsor-feature span{font-size:.74rem;color:var(--text-dim)}
+.sponsor-feature-logo{
+  width:54px;height:54px;border-radius:12px;object-fit:cover;flex-shrink:0;background:var(--surface-strong);
+  display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--text-faint);
+  background-size:70%;background-position:center;background-repeat:no-repeat;
+}
+.sponsor-feature-logo.has-img{font-size:0}
+
+/* ---------- estados ---------- */
+.state-loading{color:var(--text-dim);font-size:.85rem;text-align:center;padding:30px 0}
+.state-empty{
+  color:var(--text-dim);font-size:.84rem;text-align:center;padding:20px;
+  background:var(--surface);border:1px dashed var(--border-strong);border-radius:var(--radius-md);
+}
+
+/* ---------- nav inferior ---------- */
+.bottom-nav{
+  display:flex;padding:9px 4px calc(9px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--border);background:rgba(10,10,12,.94);backdrop-filter:blur(14px);
+  position:sticky;bottom:0;
+}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--text-faint);padding:5px 0}
+.nav-item .ic{width:21px;height:21px}
+.nav-item .ni-lb{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.nav-item.active{color:var(--gold)}
+
+/* ---------- Reservar turno: CTA en Inicio + item destacado en Más ----------
+   El CTA vive en .screen-pad, después de cat-select-block y antes de
+   #novedades -- nunca dentro de .hero/.hero-top/.hero-photo, que quedan
+   intactos tal como se aprobaron. */
+.rsv-cta-card{
+  position:relative;display:flex;align-items:center;gap:13px;width:100%;
+  background:var(--surface);border:1px solid rgba(230,168,60,.35);border-radius:var(--radius-lg);
+  padding:15px 14px;box-shadow:var(--shadow-card);
+}
+.rsv-cta-ic{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;background:var(--gold-dim);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+}
+.rsv-cta-tx{display:flex;flex-direction:column;gap:2px;flex:1}
+.rsv-cta-tx b{font-size:.94rem;font-weight:800}
+.rsv-cta-tx span{font-size:.76rem;color:var(--text-dim)}
+.rsv-cta-arrow{color:var(--gold);flex-shrink:0}
+
+.more-item.is-featured{border-color:rgba(230,168,60,.45);background:var(--gold-dim)}
+.more-item.is-featured .mi-tx{color:var(--gold-light)}
+
+/* ---------- Reservar turno: wizard ---------- */
+.rsv-steps{display:flex;align-items:center;gap:6px}
+.rsv-step{flex:1;height:4px;border-radius:999px;background:var(--surface-strong)}
+.rsv-step.active, .rsv-step.done{background:var(--gold)}
+
+.rsv-panel{display:flex;flex-direction:column;gap:14px}
+.rsv-panel-title{font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.rsv-panel-title.center{text-align:center}
+.rsv-back{font-size:.76rem;color:var(--text-dim);font-weight:700;align-self:flex-start}
+
+.rsv-cruce-card{
+  width:100%;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:14px;margin-bottom:8px;
+}
+.rsv-cruce-pareja{flex:1;font-size:.85rem;font-weight:700;text-align:center}
+.rsv-cruce-vs{font-family:'Barlow Condensed';font-size:.68rem;color:var(--text-faint);letter-spacing:.1em;flex-shrink:0}
+
+.rsv-dia-block{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.rsv-dia-label{font-size:.78rem;font-weight:800;color:var(--text-dim);text-transform:uppercase;letter-spacing:.03em}
+.rsv-turno-list{display:flex;flex-direction:column;gap:8px}
+.rsv-turno-btn{
+  display:flex;align-items:center;justify-content:space-between;width:100%;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:13px 14px;transition:border-color .12s ease;
+}
+.rsv-turno-btn:active{border-color:var(--gold)}
+.rsv-turno-btn:disabled{opacity:.5;cursor:not-allowed}
+.rsv-turno-btn.rsv-turno-en-vuelo{border-color:var(--gold);opacity:.85}
+.rsv-turno-hora{font-size:.86rem;font-weight:700}
+.rsv-turno-cupo{font-size:.72rem;color:var(--gold);font-weight:700}
+
+.rsv-hold-banner{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--gold-dim);border:1px solid rgba(230,168,60,.5);border-radius:var(--radius-md);
+  padding:12px 15px;
+}
+.rsv-hold-lbl{font-size:.76rem;font-weight:800;color:var(--gold-light);text-transform:uppercase;letter-spacing:.02em}
+.rsv-hold-timer{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--gold)}
+
+.rsv-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;display:flex;flex-direction:column;gap:8px}
+.rsv-summary-row{display:flex;align-items:center;justify-content:space-between;font-size:.82rem;gap:10px}
+.rsv-summary-row span{color:var(--text-dim)}
+.rsv-summary-row b{font-weight:700;text-align:right}
+
+.rsv-field{display:flex;flex-direction:column;gap:6px}
+.rsv-field label{font-size:.72rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.rsv-field input{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:12px 13px;font-size:.9rem;color:var(--text);font-family:inherit;width:100%;
+}
+.rsv-field input:focus{border-color:var(--gold);outline:none}
+
+.rsv-pago-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;display:flex;flex-direction:column;gap:9px}
+.rsv-pago-row{display:flex;align-items:center;justify-content:space-between;font-size:.84rem;color:var(--text-dim)}
+.rsv-pago-row b{color:var(--text);font-weight:700}
+.rsv-pago-row.highlight{color:var(--gold-light);font-weight:700}
+.rsv-pago-row.highlight b{color:var(--gold)}
+.rsv-alias-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border-top:1px solid var(--border);padding-top:11px;margin-top:2px;
+}
+.rsv-alias-lbl{display:block;font-size:.66rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.rsv-alias-value{display:block;font-size:.92rem;font-weight:800;font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.rsv-copy-btn{
+  flex-shrink:0;background:var(--gold);color:var(--gold-ink);font-size:.74rem;font-weight:800;
+  padding:9px 14px;border-radius:999px;white-space:nowrap;
+}
+
+.rsv-upload{
+  display:flex;align-items:center;gap:12px;background:var(--surface);border:1px dashed var(--border-strong);
+  border-radius:var(--radius-md);padding:14px;cursor:pointer;
+}
+.rsv-upload-ic{width:38px;height:38px;border-radius:10px;background:var(--surface-strong);color:var(--text-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rsv-upload-tx{font-size:.82rem;color:var(--text-dim);font-weight:600}
+
+.rsv-error{
+  color:var(--warn);background:var(--warn-bg);border:1px solid rgba(255,182,72,.35);
+  border-radius:var(--radius-sm);padding:11px 13px;font-size:.8rem;font-weight:600;margin:0;
+}
+.rsv-warn-text{color:var(--warn);font-size:.82rem;line-height:1.5;margin:0 0 12px}
+
+.rsv-confirm-btn{width:100%;border:none;cursor:pointer}
+.rsv-confirm-btn:disabled{opacity:.5;cursor:not-allowed}
+
+.rsv-exito-ic{
+  width:60px;height:60px;border-radius:50%;background:var(--gold);color:var(--gold-ink);
+  display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;margin:6px auto 0;
+}
+.rsv-privado-note{text-align:center;font-size:.76rem;color:var(--text-faint);margin:0}
+
+/* ---------- Reservar turno: código corto ---------- */
+.rsv-codigo-card{
+  background:var(--gold-dim);border:1px solid rgba(230,168,60,.5);border-radius:var(--radius-md);
+  padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;
+}
+.rsv-codigo-lbl{font-size:.66rem;color:var(--gold-light);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.rsv-codigo-value{font-family:'IBM Plex Mono',monospace;font-size:1.35rem;font-weight:700;letter-spacing:.12em;color:var(--gold)}
+
+/* ---------- Reservar turno: gestión / cancelación ---------- */
+#rsv-cancel-zone{margin-top:4px;display:flex;flex-direction:column;gap:10px}
+.rsv-cancel-actions{display:flex;gap:10px}
+.rsv-btn-ghost, .rsv-btn-danger{
+  flex:1;padding:12px;border-radius:999px;font-size:.82rem;font-weight:800;text-align:center;
+}
+.rsv-btn-ghost{background:var(--surface-strong);color:var(--text)}
+.rsv-btn-danger{background:var(--warn);color:#2a1500}
+.rsv-btn-aprobar{
+  flex:1;padding:12px;border-radius:999px;font-size:.82rem;font-weight:800;text-align:center;
+  background:var(--gold);color:var(--gold-ink);
+}
+
+/* ---------- Reservar turno: nota de estado (pendiente/rechazado) ---------- */
+.rsv-pendiente-note{
+  background:var(--gold-dim);border:1px solid rgba(230,168,60,.4);border-radius:var(--radius-md);
+  padding:12px 14px;font-size:.82rem;color:var(--text);line-height:1.5;margin:0;
+}
+
+/* ---------- Reservar turno: botón de WhatsApp ---------- */
+/* Mismo lenguaje visual que el resto de la app (negro/dorado, sin verde
+   de marca ni estética de promo) -- coherente con .social-link, que ya
+   trata a WhatsApp como un ícono monocromático más, no como un cartel. */
+.rsv-whatsapp-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+  background:var(--surface-strong);border:1px solid var(--border-strong);color:var(--text);
+  font-weight:800;font-size:.85rem;text-transform:uppercase;letter-spacing:.02em;
+  padding:15px 22px;border-radius:999px;transition:border-color .12s ease, transform .12s ease;
+}
+.rsv-whatsapp-btn:active{transform:scale(.97)}
+.rsv-whatsapp-btn .ic{color:var(--gold)}
+
+/* ---------- Acceso general (contraseña de la liga) ---------- */
+.access-gate{
+  position:fixed;inset:0;z-index:50;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.access-card{
+  width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;
+}
+.access-logo{width:96px;height:auto;object-fit:contain;margin-bottom:2px}
+.access-ic{
+  width:48px;height:48px;border-radius:50%;background:var(--gold-dim);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+}
+.access-title{font-size:1.2rem;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.access-sub{margin:-6px 0 4px;font-size:.84rem;color:var(--text-dim)}
+.access-card .rsv-field{width:100%;text-align:left}
+.access-card .doc-card-btn{width:100%;border:none;cursor:pointer}
+
+/* ---------- Panel admin (?admin=1) ---------- */
+#admin-gate{display:flex;flex-direction:column;gap:14px;max-width:360px}
+#admin-gate .doc-card-btn{width:100%;border:none;cursor:pointer}
+#admin-panel{display:flex;flex-direction:column;gap:14px}
+#adminRefrescarBtn{align-self:flex-start}
+#adminPendientesLista{display:flex;flex-direction:column;gap:12px}
+.admin-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:14px;display:flex;flex-direction:column;gap:7px;
+}
+.admin-card-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.82rem}
+.admin-card-row span{color:var(--text-dim);flex-shrink:0}
+.admin-card-row b{font-weight:700;text-align:right}
+.admin-comprobante-link{
+  font-size:.8rem;font-weight:700;color:var(--gold);text-decoration:underline;text-underline-offset:3px;
+  align-self:flex-start;margin-top:2px;
+}
+.admin-card-actions{display:flex;gap:10px;margin-top:6px}
+.admin-card-actions button{border:none;cursor:pointer}
+
+/* ---------- accesibilidad ---------- */
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms!important;transition-duration:0.001ms!important}
+}
