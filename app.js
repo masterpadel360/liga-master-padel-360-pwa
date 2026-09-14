@@ -570,16 +570,52 @@ function cargarFotosInicio_() {
 // ============================================================
 // Posiciones
 // ============================================================
+function mostrarErrorPosiciones_(cat) {
+  if (categoriaActual !== cat) return;
+  var cont = document.getElementById('posRows');
+  if (!cont) return;
+  cont.innerHTML = '<p class="state-empty">No se pudo cargar la tabla.</p>';
+
+  var btn = document.getElementById('pos-retry-btn');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'pos-retry-btn';
+    btn.type = 'button';
+    btn.textContent = 'Reintentar';
+    btn.className = 'chip';
+    btn.onclick = function () {
+      reintentarPosiciones_();
+    };
+    cont.appendChild(btn);
+  }
+}
+function reintentarPosiciones_() {
+  var cat = categoriaActual; if (!cat) return;
+  var clave = 'pos|' + cat;
+  var cont = document.getElementById('posRows');
+  var btn = document.getElementById('pos-retry-btn');
+  if (btn) btn.remove();
+  if (cont) cont.innerHTML = '<div class="state-loading">Cargando…</div>';
+
+  pedirSinDuplicarEnVuelo_(clave, function () { return apiFetch('posiciones', { categoria: cat }); }).then(function (filas) {
+    if (categoriaActual !== cat) return;
+    cache_[clave] = filas;
+    renderPosiciones_(filas);
+  }).catch(function () {
+    if (categoriaActual === cat) mostrarErrorPosiciones_(cat);
+  });
+}
 function cargarPosiciones_() {
   var cat = categoriaActual; if (!cat) return;
   var clave = 'pos|' + cat;
   if (cache_[clave]) { renderPosiciones_(cache_[clave]); return; }
   document.getElementById('posRows').innerHTML = '<div class="state-loading">Cargando…</div>';
-  pedirConCache_(clave, function () { return apiFetch('posiciones', { categoria: cat }); }).then(function (filas) {
-    if (categoriaActual === cat) renderPosiciones_(filas);
+  pedirSinDuplicarEnVuelo_(clave, function () { return apiFetch('posiciones', { categoria: cat }); }).then(function (filas) {
+    if (categoriaActual !== cat) return;
+    cache_[clave] = filas;
+    renderPosiciones_(filas);
   }).catch(function () {
-    if (categoriaActual === cat) document.getElementById('posRows').innerHTML =
-      '<p class="state-empty">No se pudo cargar la tabla. Probá de nuevo en un momento.</p>';
+    if (categoriaActual === cat) mostrarErrorPosiciones_(cat);
   });
 }
 function renderPosiciones_(filas) {
@@ -727,16 +763,52 @@ document.addEventListener('click', function (e) {
 // ============================================================
 // Resultados
 // ============================================================
+function mostrarErrorResultados_(cat) {
+  if (categoriaActual !== cat) return;
+  var cont = document.getElementById('resMatches');
+  if (!cont) return;
+  cont.innerHTML = '<p class="state-empty">No se pudieron cargar los resultados.</p>';
+
+  var btn = document.getElementById('res-retry-btn');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'res-retry-btn';
+    btn.type = 'button';
+    btn.textContent = 'Reintentar';
+    btn.className = 'chip';
+    btn.onclick = function () {
+      reintentarResultados_();
+    };
+    cont.appendChild(btn);
+  }
+}
+function reintentarResultados_() {
+  var cat = categoriaActual; if (!cat) return;
+  var clave = 'res|' + cat;
+  var cont = document.getElementById('resMatches');
+  var btn = document.getElementById('res-retry-btn');
+  if (btn) btn.remove();
+  if (cont) cont.innerHTML = '<div class="state-loading">Cargando…</div>';
+
+  pedirSinDuplicarEnVuelo_(clave, function () { return apiFetch('resultados', { categoria: cat }); }).then(function (lista) {
+    if (categoriaActual !== cat) return;
+    cache_[clave] = lista;
+    renderResultados_(lista);
+  }).catch(function () {
+    if (categoriaActual === cat) mostrarErrorResultados_(cat);
+  });
+}
 function cargarResultados_() {
   var cat = categoriaActual; if (!cat) return;
   var clave = 'res|' + cat;
   if (cache_[clave]) { renderResultados_(cache_[clave]); return; }
   document.getElementById('resMatches').innerHTML = '<div class="state-loading">Cargando…</div>';
-  pedirConCache_(clave, function () { return apiFetch('resultados', { categoria: cat }); }).then(function (lista) {
-    if (categoriaActual === cat) renderResultados_(lista);
+  pedirSinDuplicarEnVuelo_(clave, function () { return apiFetch('resultados', { categoria: cat }); }).then(function (lista) {
+    if (categoriaActual !== cat) return;
+    cache_[clave] = lista;
+    renderResultados_(lista);
   }).catch(function () {
-    if (categoriaActual === cat) document.getElementById('resMatches').innerHTML =
-      '<p class="state-empty">No se pudo cargar los resultados. Probá de nuevo en un momento.</p>';
+    if (categoriaActual === cat) mostrarErrorResultados_(cat);
   });
 }
 function renderResultados_(lista) {
