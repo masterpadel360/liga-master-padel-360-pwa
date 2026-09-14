@@ -331,7 +331,6 @@ function elegirCategoria_(cat) {
   // Elegido el chip, el selector se cierra/compacta (patrón tap-para-
   // desplegar: la próxima vez que haga falta elegir, arranca cerrado).
   actualizarSelectorInicio_(false);
-  precargarPantallasCategoria_(categoriaActual);
   cargarPantalla_(pantallaActual);
 }
 
@@ -483,7 +482,6 @@ function recargarCategoriasBootstrap_(forzarLoading) {
     }
 
     actualizarSelectorInicio_();
-    precargarPantallasCategoria_(categoriaActual);
 
     try {
       renderInicio_(boot.inicio || {});
@@ -567,32 +565,6 @@ function cargarFotosInicio_() {
     img.onerror = function () { /* la foto no cargó: el banner sigue oculto */ };
     img.src = foto.url;
   }).catch(function () { /* sin fotos no rompe Inicio */ });
-}
-
-// ============================================================
-// Precarga en segundo plano de Posiciones/Fixture/Resultados para la
-// categoría activa. Usa exactamente el mismo cache_ y las mismas
-// claves ('pos|cat', 'fix|cat', 'res|cat') que ya consultan
-// cargarPosiciones_/cargarFixture_/cargarResultados_ antes de pedir
-// red -- por eso alcanza con completar cache_ acá: si el jugador
-// después entra a esas pantallas y la precarga ya terminó, las va a
-// ver instantáneas, sin tocar en nada su lógica de carga ni de
-// render. Nunca renderiza nada ella misma (eso lo sigue haciendo cada
-// pantalla la primera vez que se visita, cache_ mediante).
-// Si una petición falla, el catch la ignora en silencio: no rompe
-// Inicio ni muestra ningún error, y esa pantalla simplemente va a
-// pedir sus datos de nuevo (como si no hubiese precarga) cuando el
-// jugador la visite.
-function precargarPantallasCategoria_(cat) {
-  if (!cat) return;
-  pedirConCache_('pos|' + cat, function () { return apiFetch('posiciones', { categoria: cat }); }).catch(function () { /* sin precarga, cargarPosiciones_ pide los datos igual */ });
-  pedirConCache_('fix|' + cat, function () {
-    return apiFetch('fixture', { categoria: cat }).then(function (datos) {
-      guardarFixtureCache_(cat, datos);
-      return datos;
-    });
-  }).catch(function () { /* idem */ });
-  pedirConCache_('res|' + cat, function () { return apiFetch('resultados', { categoria: cat }); }).catch(function () { /* idem */ });
 }
 
 // ============================================================
@@ -1979,7 +1951,6 @@ function arrancarApp_() {
     var guardadaCache = leerCategoriaGuardada_();
     categoriaActual = (guardadaCache && CATEGORIAS.indexOf(guardadaCache) !== -1) ? guardadaCache : null;
     actualizarSelectorInicio_();
-    precargarPantallasCategoria_(categoriaActual);
   } else {
     CATEGORIAS = [];
     categoriaActual = null;
