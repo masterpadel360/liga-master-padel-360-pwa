@@ -204,6 +204,26 @@ function guardarCategoriasCache_(categorias) {
   } catch (e) { /* storage no disponible: no rompe la app, solo no hay caché */ }
 }
 
+var LS_FIXTURE_CACHE_PREFIX_ = 'mp360_fixture_cache_';
+var FIXTURE_CACHE_TTL_MS_ = 3 * 60 * 1000;
+function leerFixtureCache_(categoria) {
+  try {
+    var raw = localStorage.getItem(LS_FIXTURE_CACHE_PREFIX_ + categoria);
+    if (!raw) return null;
+    var obj = JSON.parse(raw);
+    if (!obj || !obj.ts || !obj.datos) return null;
+    return obj;
+  } catch (e) { return null; }
+}
+function guardarFixtureCache_(categoria, datos) {
+  try {
+    localStorage.setItem(LS_FIXTURE_CACHE_PREFIX_ + categoria, JSON.stringify({ datos: datos, ts: Date.now() }));
+  } catch (e) { /* storage no disponible: no rompe la app */ }
+}
+function fixtureCacheVigente_(obj) {
+  return !!obj && (Date.now() - obj.ts) < FIXTURE_CACHE_TTL_MS_;
+}
+
 // "premios", "sobre-liga" y "contacto" son pantallas nuevas de este
 // rediseño; "sobre-liga" y "contacto" no piden nada al backend (son
 // contenido fijo editable directo en index.html), por eso no tienen
@@ -488,7 +508,12 @@ function cargarFotosInicio_() {
 function precargarPantallasCategoria_(cat) {
   if (!cat) return;
   pedirConCache_('pos|' + cat, function () { return apiFetch('posiciones', { categoria: cat }); }).catch(function () { /* sin precarga, cargarPosiciones_ pide los datos igual */ });
-  pedirConCache_('fix|' + cat, function () { return apiFetch('fixture', { categoria: cat }); }).catch(function () { /* idem */ });
+  pedirConCache_('fix|' + cat, function () {
+    return apiFetch('fixture', { categoria: cat }).then(function (datos) {
+      guardarFixtureCache_(cat, datos);
+      return datos;
+    });
+  }).catch(function () { /* idem */ });
   pedirConCache_('res|' + cat, function () { return apiFetch('resultados', { categoria: cat }); }).catch(function () { /* idem */ });
 }
 
@@ -538,15 +563,41 @@ document.addEventListener('click', function (e) {
 function cargarFixture_() {
   var cat = categoriaActual; if (!cat) return;
   var clave = 'fix|' + cat;
-  if (cache_[clave]) { renderFixture_(cache_[clave]); return; }
-  document.getElementById('fixMatches').innerHTML = '<div class="state-loading">Cargando…</div>';
-  document.getElementById('fixFechas').innerHTML = '';
-  pedirConCache_(clave, function () { return apiFetch('fixture', { categoria: cat }); }).then(function (datos) {
-    if (categoriaActual === cat) renderFixture_(datos);
-  }).catch(function () {
-    if (categoriaActual === cat) document.getElementById('fixMatches').innerHTML =
-      '<p class="state-empty">No se pudo cargar el fixture. Probá de nuevo en un momento.</p>';
-  });
+  var cacheado = leerFixtureCache_(cat);
+
+  var datosMemoria = cache_[clave];
+  if (datosMemoria) {
+    renderFixture_(datosMemoria);
+  } else if (cacheado && cacheado.datos) {
+    cache_[clave] = cacheado.datos;
+    renderFixture_(cacheado.datos);
+  } else {
+    document.getElementById('fixMatches').innerHTML = '<div class="state-loading">Cargando…</div>';
+    document.getElementById('fixFechas').innerHTML = '';
+  }
+
+  var debeRevalidar = !!cacheado && !!cacheado.datos && !fixtureCacheVigente_(cacheado);
+  if (debeRevalidar) {
+    pedirSinDuplicarEnVuelo_(clave, function () { return apiFetch('fixture', { categoria: cat }); }).then(function (datosNuevos) {
+      if (categoriaActual !== cat) return;
+      cache_[clave] = datosNuevos;
+      guardarFixtureCache_(cat, datosNuevos);
+      renderFixture_(datosNuevos);
+    }).catch(function () { /* se mantiene el caché stale visible mientras revalida */ });
+    return;
+  }
+
+  if (!datosMemoria && (!cacheado || !cacheado.datos)) {
+    pedirSinDuplicarEnVuelo_(clave, function () { return apiFetch('fixture', { categoria: cat }); }).then(function (datos) {
+      if (categoriaActual !== cat) return;
+      cache_[clave] = datos;
+      guardarFixtureCache_(cat, datos);
+      renderFixture_(datos);
+    }).catch(function () {
+      if (categoriaActual === cat) document.getElementById('fixMatches').innerHTML =
+        '<p class="state-empty">No se pudo cargar el fixture. Probá de nuevo en un momento.</p>';
+    });
+  }
 }
 function renderFixture_(datos) {
   var contFechas = document.getElementById('fixFechas');
