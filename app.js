@@ -737,7 +737,7 @@ function renderSponsors_(datos) {
 // porque lee e.postData.contents y lo parsea como JSON sin mirar el
 // Content-Type declarado (ver CodigoReservasAPI.gs, ejecutarAccion_).
 // ============================================================
-var RESERVAS_API_URL = 'https://script.google.com/macros/s/AKfycbxWpBJOCBr8oNLYfoaPAGUbB4KDjDaLJ4ars9B6Zv_f3prrCC-Tz1j-xEELxvvZlaJICQ/exec';
+var RESERVAS_API_URL = 'https://script.google.com/macros/s/AKfycbxZYH81bAAQMgQMksZ6vNKqWc8y4bnLvs6v6vUPvP-shVWgu5_etvGLc1qR3bpnwih_/exec';
 // Mismo criterio que API_TIMEOUT_MS_ arriba: 15s de margen real contra
 // el backend, medido en vivo, en vez de un valor corto que termina
 // provocando un reintento completo (más lento, no más rápido).
