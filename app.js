@@ -638,6 +638,42 @@ document.addEventListener('click', function (e) {
 // ============================================================
 // Fixture
 // ============================================================
+function mostrarErrorFixture_(cat) {
+  if (categoriaActual !== cat) return;
+  var cont = document.getElementById('fixMatches');
+  if (!cont) return;
+  cont.innerHTML = '<p class="state-empty">No se pudo cargar el fixture.</p>';
+
+  var btn = document.getElementById('fix-retry-btn');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'fix-retry-btn';
+    btn.type = 'button';
+    btn.textContent = 'Reintentar';
+    btn.className = 'chip';
+    btn.onclick = function () {
+      reintentarFixture_();
+    };
+    cont.appendChild(btn);
+  }
+}
+function reintentarFixture_() {
+  var cat = categoriaActual; if (!cat) return;
+  var clave = 'fix|' + cat;
+  var cont = document.getElementById('fixMatches');
+  var btn = document.getElementById('fix-retry-btn');
+  if (btn) btn.remove();
+  if (cont) cont.innerHTML = '<div class="state-loading">Cargando…</div>';
+
+  pedirSinDuplicarEnVuelo_(clave, function () { return apiFetch('fixture', { categoria: cat }); }).then(function (datos) {
+    if (categoriaActual !== cat) return;
+    cache_[clave] = datos;
+    guardarFixtureCache_(cat, datos);
+    renderFixture_(datos);
+  }).catch(function () {
+    if (categoriaActual === cat) mostrarErrorFixture_(cat);
+  });
+}
 function cargarFixture_() {
   var cat = categoriaActual; if (!cat) return;
   var clave = 'fix|' + cat;
@@ -672,8 +708,7 @@ function cargarFixture_() {
       guardarFixtureCache_(cat, datos);
       renderFixture_(datos);
     }).catch(function () {
-      if (categoriaActual === cat) document.getElementById('fixMatches').innerHTML =
-        '<p class="state-empty">No se pudo cargar el fixture. Probá de nuevo en un momento.</p>';
+      if (categoriaActual === cat) mostrarErrorFixture_(cat);
     });
   }
 }
