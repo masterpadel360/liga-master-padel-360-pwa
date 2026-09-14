@@ -178,24 +178,17 @@ function leerCategoriaGuardada_() {
 // pero arrancarApp_ la pedía de cero en CADA carga de página vía
 // apiFetch('bootstrap') -- el jugador se quedaba mirando el selector de
 // categoría vacío varios segundos en cada visita, aunque fuera la MISMA
-// lista de siempre. Ahora, si hay una copia local de menos de
-// CATEGORIAS_CACHE_TTL_MS_, se usa para pintar el selector DE INMEDIATO,
-// sin esperar red. El pedido real a apiFetch('bootstrap') sigue
-// disparándose igual que antes, sin excepción -- sigue siendo la fuente
-// de verdad: cuando responde, pisa CATEGORIAS/categoriaActual con el dato
-// fresco (ver arrancarApp_) y vuelve a guardar la copia local. Si el
-// admin borra o agrega una categoría, el jugador la ve apenas esa
-// respuesta real llegue -- unos segundos más tarde, nunca más que eso.
+// lista de siempre. El cache local se usa para pintar el selector DE
+// INMEDIATO y el bootstrap real se revalida en background para mantener
+// la lista fresca sin bloquear la UI.
 var LS_CATEGORIAS_CACHE_ = 'mp360_categorias_cache';
-var CATEGORIAS_CACHE_TTL_MS_ = 10 * 60 * 1000;
 function leerCategoriasCache_() {
   try {
     var raw = localStorage.getItem(LS_CATEGORIAS_CACHE_);
     if (!raw) return null;
     var obj = JSON.parse(raw);
     if (!obj || !Array.isArray(obj.categorias) || !obj.ts) return null;
-    if (Date.now() - obj.ts > CATEGORIAS_CACHE_TTL_MS_) return null;
-    return obj.categorias;
+    return obj;
   } catch (e) { return null; }
 }
 function guardarCategoriasCache_(categorias) {
@@ -320,7 +313,12 @@ function cargarPantalla_(pantalla) {
 // Selector de categoría (chips, compartido entre 3 pantallas)
 // ============================================================
 function pintarChipsCategoria_(contId) {
-  document.getElementById(contId).innerHTML = CATEGORIAS.map(function (cat) {
+  var cont = document.getElementById(contId);
+  if (!CATEGORIAS.length) {
+    cont.innerHTML = '<div class="state-loading">Cargando categorías…</div>';
+    return;
+  }
+  cont.innerHTML = CATEGORIAS.map(function (cat) {
     return '<button class="chip' + (cat === categoriaActual ? ' active' : '') + '" data-cat="' + esc_(cat) + '">' + esc_(cat) + '</button>';
   }).join('');
 }
@@ -408,10 +406,25 @@ function actualizarSelectorInicio_(abrir) {
 
   if (typeof abrir === 'boolean') selectorInicioAbierto_ = abrir;
 
-  pintarChipsCategoria_('inicioCats');
-
   var hayCategoria = !!categoriaActual;
   var mostrarChips = selectorInicioAbierto_;
+
+  if (!CATEGORIAS.length && !hayCategoria) {
+    if (mostrarChips) {
+      expandido.hidden = false;
+      cta.hidden = true;
+      filaActiva.hidden = true;
+      pintarChipsCategoria_('inicioCats');
+      return;
+    }
+    cta.hidden = false;
+    expandido.hidden = true;
+    filaActiva.hidden = true;
+    pintarChipsCategoria_('inicioCats');
+    return;
+  }
+
+  pintarChipsCategoria_('inicioCats');
 
   cta.hidden = hayCategoria || mostrarChips;
   expandido.hidden = !mostrarChips;
@@ -419,6 +432,71 @@ function actualizarSelectorInicio_(abrir) {
   bloque.classList.toggle('is-compact', hayCategoria && !mostrarChips);
   bloque.classList.toggle('needs-choice', !hayCategoria);
   valorActivo.textContent = hayCategoria ? categoriaActual : '';
+}
+function mostrarErrorCategorias_() {
+  if (CATEGORIAS.length) return;
+  var cont = document.getElementById('inicioCats');
+  var cta = document.getElementById('cat-select-cta');
+  var expandido = document.getElementById('cat-select-expanded');
+  if (!cont) return;
+  cont.innerHTML = '<p class="state-empty">No se pudo cargar la lista de categorías. Probá de nuevo.</p>';
+  var btn = document.getElementById('cat-retry-btn');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'cat-retry-btn';
+    btn.type = 'button';
+    btn.textContent = 'Reintentar';
+    btn.className = 'chip';
+    btn.onclick = function () {
+      recargarCategoriasBootstrap_(true);
+    };
+    cont.appendChild(btn);
+  }
+  if (cta) cta.hidden = true;
+  if (expandido) expandido.hidden = false;
+}
+function recargarCategoriasBootstrap_(forzarLoading) {
+  var cont = document.getElementById('inicioCats');
+  var cta = document.getElementById('cat-select-cta');
+  var expandido = document.getElementById('cat-select-expanded');
+  var debeMostrarLoading = !!forzarLoading || !CATEGORIAS.length;
+  if (debeMostrarLoading && cont) {
+    cont.innerHTML = '<div class="state-loading">Cargando categorías…</div>';
+    if (cta) cta.hidden = true;
+    if (expandido) expandido.hidden = false;
+  }
+
+  return apiFetch('bootstrap').then(function (boot) {
+    boot = boot || {};
+    var categoriasNuevas = Array.isArray(boot.categorias) ? boot.categorias.filter(Boolean) : [];
+    if (categoriasNuevas.length || !CATEGORIAS.length) {
+      CATEGORIAS = categoriasNuevas;
+      guardarCategoriasCache_(CATEGORIAS);
+    }
+
+    var guardada = leerCategoriaGuardada_();
+    if (guardada && CATEGORIAS.indexOf(guardada) !== -1) {
+      categoriaActual = guardada;
+    } else {
+      if (guardada) borrarCategoriaGuardada_();
+      categoriaActual = null;
+    }
+
+    actualizarSelectorInicio_();
+    precargarPantallasCategoria_(categoriaActual);
+
+    try {
+      renderInicio_(boot.inicio || {});
+    } catch (e) {
+      console.error('No se pudo pintar el contenido dinámico de Inicio:', e);
+    }
+    cargarFotosInicio_();
+  }).catch(function (err) {
+    if (!CATEGORIAS.length) {
+      mostrarErrorCategorias_();
+    }
+    console.error(err);
+  });
 }
 document.getElementById('cat-select-cta').addEventListener('click', function () {
   actualizarSelectorInicio_(true);
@@ -1858,62 +1936,26 @@ function arrancarApp_() {
   // Pintado inmediato del selector de categoría con la última lista
   // conocida (localStorage, ver leerCategoriasCache_) mientras el
   // bootstrap real todavía viaja -- así el selector no se queda vacío
-  // varios segundos en cada visita. Es solo un adelanto visual: el
-  // apiFetch('bootstrap') de abajo sigue siendo la fuente de verdad y
-  // pisa esto apenas responde (misma lógica de siempre, sin cambios).
+  // varios segundos en cada visita. El cache local se usa como stale y
+  // el bootstrap real revalida en background igual que antes.
   var categoriasCacheadas = leerCategoriasCache_();
-  if (categoriasCacheadas && categoriasCacheadas.length) {
-    CATEGORIAS = categoriasCacheadas;
+  if (categoriasCacheadas && Array.isArray(categoriasCacheadas.categorias) && categoriasCacheadas.categorias.length) {
+    CATEGORIAS = categoriasCacheadas.categorias;
     var guardadaCache = leerCategoriaGuardada_();
     categoriaActual = (guardadaCache && CATEGORIAS.indexOf(guardadaCache) !== -1) ? guardadaCache : null;
     actualizarSelectorInicio_();
     precargarPantallasCategoria_(categoriaActual);
-  }
-
-  apiFetch('bootstrap').then(function (boot) {
-  boot = boot || {};
-  CATEGORIAS = Array.isArray(boot.categorias) ? boot.categorias.filter(Boolean) : [];
-  guardarCategoriasCache_(CATEGORIAS);
-
-  // Categoría guardada de una visita anterior: solo se respeta si sigue
-  // existiendo en CATEGORIAS (la fuente de verdad real del backend).
-  var guardada = leerCategoriaGuardada_();
-  if (guardada && CATEGORIAS.indexOf(guardada) !== -1) {
-    categoriaActual = guardada;
   } else {
-    if (guardada) borrarCategoriaGuardada_();
+    CATEGORIAS = [];
     categoriaActual = null;
+    actualizarSelectorInicio_();
   }
 
-  // El selector de categoría se pinta siempre, sin importar si el resto
-  // del contenido de Inicio (novedades, sponsors, banner) falla.
-  actualizarSelectorInicio_();
-
-  // Si ya había una categoría válida guardada, arrancamos a precargar
-  // Posiciones/Fixture/Resultados en segundo plano (no-op si no hay
-  // categoría: precargarPantallasCategoria_ corta sola).
-  precargarPantallasCategoria_(categoriaActual);
-
-  try {
-    renderInicio_(boot.inicio || {});
-  } catch (e) {
-    console.error('No se pudo pintar el contenido dinámico de Inicio:', e);
-  }
-  cargarFotosInicio_();
+  recargarCategoriasBootstrap_();
 
   // Si había un token de gestión, la pantalla de esa reserva ya se
   // mostró arriba, antes de este bootstrap -- acá NO hay que pisarla
   // volviendo a Inicio. Este bootstrap solo dejó CATEGORIAS/novedades
   // listas por si el jugador navega a otra pantalla después.
   if (!tokenGestion) irA('inicio');
-  }).catch(function (err) {
-    // Mismo cuidado acá: si había token, la pantalla de gestión ya está
-    // mostrada y no depende de este bootstrap -- no hay que reemplazar
-    // Inicio por un error que ni siquiera se está mostrando.
-    if (!tokenGestion) {
-      document.getElementById('screen-inicio').innerHTML =
-        '<p class="state-empty">No se pudo conectar con el servidor. Si esto persiste, revisá API_URL en app.js.</p>';
-    }
-    console.error(err);
-  });
 }
