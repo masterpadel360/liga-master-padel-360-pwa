@@ -1248,14 +1248,6 @@ document.addEventListener('click', function (e) {
   var horarioInicio = el.getAttribute('data-rsv-inicio');
   var horarioFin = el.getAttribute('data-rsv-fin');
 
-  // Guarda defensiva: sin esto, si reservaPartido_ (o su idPartido) se
-  // perdiera por cualquier motivo entre elegir el cruce y tocar un
-  // horario, "reservaPartido_.idPartido" de más abajo tiraría un
-  // TypeError sin capturar ("Cannot read properties of null") -- ni
-  // siquiera se armaría el pedido, y el jugador quedaría con los
-  // botones deshabilitados para siempre, sin ningún mensaje. Acá se
-  // corta ANTES de eso: se avisa y se manda de nuevo al paso de elegir
-  // cruce (nunca se llega a mandar un pedido con datos incompletos).
   if (!reservaPartido_ || !reservaPartido_.idPartido) {
     reservarIrAPaso_('cruce');
     document.getElementById('rsvCruces').innerHTML =
@@ -1263,50 +1255,28 @@ document.addEventListener('click', function (e) {
     return;
   }
 
+  // STAGING: la intención de elegir un horario ya no dispara retención.
+  // Solo guardamos la selección localmente y pasamos a checkout para que
+  // el usuario pueda revisar datos sin bloquear disponibilidad ni crear
+  // filas en RETENCIONES. La retención real se moverá a la acción futura
+  // de "Reservar y pagar $9.000".
   reservaEnvioEnCurso_ = true;
+  if (reservaCountdownTimer_) { clearInterval(reservaCountdownTimer_); reservaCountdownTimer_ = null; }
 
-  // Feedback inmediato al tocar: sin esto, mientras retenerTurno está en
-  // vuelo (puede tardar varios segundos contra el backend real) la
-  // pantalla se queda exactamente igual y da la sensación de que el toque
-  // no hizo nada -- especialmente confuso si el pedido termina fallando
-  // (por ejemplo por lentitud del backend), porque no había ninguna señal
-  // de que algo se había disparado en primer lugar.
-  var botonesTurno = document.querySelectorAll('#rsvDias .rsv-turno-btn');
-  botonesTurno.forEach(function (b) { b.disabled = true; });
-  el.classList.add('rsv-turno-en-vuelo');
-  var horaSpan = el.querySelector('.rsv-turno-hora');
-  var horaTextoOriginal = horaSpan ? horaSpan.textContent : '';
-  if (horaSpan) horaSpan.textContent = 'Reservando…';
+  reservaRetencion_ = {
+    idRetencion: null,
+    minutos: 0,
+    categoria: reservaCategoria_,
+    parejaA: reservaPartido_.parejaA,
+    parejaB: reservaPartido_.parejaB,
+    fecha: fecha,
+    horarioInicio: horarioInicio,
+    horarioFin: horarioFin,
+  };
 
-  reservasApiPost_('retenerTurno', {
-    idPartido: reservaPartido_.idPartido, fecha: fecha, horarioInicio: horarioInicio, horarioFin: horarioFin,
-  }).then(function (datos) {
-    reservaEnvioEnCurso_ = false;
-    reservaRetencion_ = datos;
-    reservarIniciarCountdown_(datos.minutos);
-    reservarPintarResumenCheckout_();
-    reservarIrAPaso_('checkout');
-  }).catch(function (err) {
-    reservaEnvioEnCurso_ = false;
-    botonesTurno.forEach(function (b) { b.disabled = false; });
-    el.classList.remove('rsv-turno-en-vuelo');
-    if (horaSpan) horaSpan.textContent = horaTextoOriginal;
-    // BUG real encontrado acá: antes, esta rama pintaba el mensaje de
-    // error y en la misma respiración llamaba a reservarCargarDisponibilidad_(),
-    // que -- como el caché ya se había borrado -- pisaba ese mismo
-    // innerHTML con "Cargando…" de forma SINCRÓNICA, en el mismo tick.
-    // El navegador nunca llegaba a pintar el error: el jugador solo veía
-    // un parpadeo y la lista de turnos de vuelta, como si el toque no
-    // hubiera hecho nada (y si volvía a tocar, se repetía igual). Ahora
-    // el error queda visible de verdad, y el refresco de disponibilidad
-    // pasa en segundo plano (silencioso, sin pisar lo que se está
-    // mostrando) para que la próxima vez que se entre a este paso el
-    // cupo ya esté actualizado.
-    document.getElementById('rsvDias').innerHTML =
-      '<p class="state-empty">' + esc_((err && err.message) || 'No se pudo retener ese turno. Probá de nuevo.') + '</p>';
-    delete cache_.disponibilidad;
-    pedirSinDuplicarEnVuelo_('disponibilidad', function () { return reservasApiGet_('disponibilidad', {}); }).then(function (datos) { disponibilidadUltimoFetchTs_ = Date.now(); cache_.disponibilidad = datos; }).catch(function () { /* si falla, se vuelve a pedir sola la próxima vez que haga falta */ });
-  });
+  reservarPintarResumenCheckout_();
+  reservarIrAPaso_('checkout');
+  reservaEnvioEnCurso_ = false;
 });
 
 // ---------- Paso 4: checkout ----------
@@ -1349,14 +1319,14 @@ function reservarPintarResumenCheckout_() {
   document.getElementById('rsv-checkout-error').hidden = true;
   document.getElementById('rsv-checkout-err-actions').hidden = true;
   var btn = document.getElementById('rsvConfirmarBtn');
-  btn.disabled = false;
-  btn.textContent = 'Confirmar reserva';
+  btn.disabled = true;
+  btn.textContent = 'Confirmar reserva (STAGING: no disponible)';
   var r = reservaRetencion_;
   document.getElementById('rsv-summary').innerHTML =
-    '<div class="rsv-summary-row"><span>Categoría</span><b>' + esc_(r.categoria) + '</b></div>' +
-    '<div class="rsv-summary-row"><span>Cruce</span><b>' + esc_(r.parejaA) + ' vs ' + esc_(r.parejaB) + '</b></div>' +
-    '<div class="rsv-summary-row"><span>Día</span><b>' + esc_(formatearFechaLarga_(r.fecha)) + '</b></div>' +
-    '<div class="rsv-summary-row"><span>Horario</span><b>' + esc_(formatearHorarioSeguro_(r.horarioInicio)) + ' - ' + esc_(formatearHorarioSeguro_(r.horarioFin)) + '</b></div>';
+    '<div class="rsv-summary-row"><span>Categoría</span><b>' + esc_(r && r.categoria ? r.categoria : '') + '</b></div>' +
+    '<div class="rsv-summary-row"><span>Cruce</span><b>' + esc_(r && r.parejaA ? r.parejaA : '') + ' vs ' + esc_(r && r.parejaB ? r.parejaB : '') + '</b></div>' +
+    '<div class="rsv-summary-row"><span>Día</span><b>' + esc_(r && r.fecha ? formatearFechaLarga_(r.fecha) : '') + '</b></div>' +
+    '<div class="rsv-summary-row"><span>Horario</span><b>' + esc_(r && r.horarioInicio ? formatearHorarioSeguro_(r.horarioInicio) : '') + ' - ' + esc_(r && r.horarioFin ? formatearHorarioSeguro_(r.horarioFin) : '') + '</b></div>';
   document.getElementById('rsvNombre').value = '';
   document.getElementById('rsvTelefono').value = '';
   document.getElementById('rsvComprobante').value = '';
@@ -1442,11 +1412,18 @@ document.getElementById('rsvConfirmarBtn').addEventListener('click', function ()
   document.getElementById('rsv-checkout-error').hidden = true;
   document.getElementById('rsv-checkout-err-actions').hidden = true;
 
+  // STAGING: no se puede confirmar sin retención real, y todavía no existe
+  // la acción final de "Reservar y pagar $9.000". Dejarlo deshabilitado
+  // evita llamar a confirmarReserva con una idRetencion inexistente.
+  if (!reservaRetencion_ || !reservaRetencion_.idRetencion) {
+    reservarMostrarErrorCheckout_('Este paso todavía no está habilitado en STAGING. La retención real se activará con el flujo de pago futuro.', true);
+    return;
+  }
+
   var nombre = document.getElementById('rsvNombre').value.trim();
   var telefono = document.getElementById('rsvTelefono').value.trim();
   if (!nombre || !telefono) { reservarMostrarErrorCheckout_('Completá nombre y teléfono.', false); return; }
   if (!reservaComprobante_) { reservarMostrarErrorCheckout_('Subí el comprobante de la seña antes de confirmar.', false); return; }
-  if (!reservaRetencion_) { reservarMostrarErrorCheckout_('Tu retención ya no está activa. Elegí el turno de nuevo.', true); return; }
 
   reservaEnvioEnCurso_ = true;
   var btn = this;
